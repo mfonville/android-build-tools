@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="https://code.getmdl.io/1.1.3/material.teal-blue.min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,500" />
+    <script async type="text/javascript" src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <meta name="theme-color" content="#8BC34A">
+    <meta charset="utf-8" />
+    <meta content="chrome=1" http-equiv="X-UA-Compatible" />
+    <meta name="apple-mobile-web-app-title" content="Android build tools for Ubuntu" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Android build tools for Ubuntu" />
+    <meta name="google-site-verification" content="6c9huZbb4ifbglzZVuBj9kqVNkJEgWkVibsKbJxvr-Y" />
+    <title>Android build tools for Ubuntu</title>
+  </head>
+  <body class="mdl-color--grey-100">
+    <div id="wrapper">
+      <div id="content">
+        <div id="title" class="mdl-typography--display-3">Android build tools for Ubuntu</div>
+        <br />
+        <div class="mdl-typography--display-1">The <a href="http://developer.android.com/tools/revisions/build-tools.html">Android build tools</a> by Google</div>
+        <br />
+        <div class="mdl-typography--headline">Add our android-build-tools repository:</div>
+        <div class="code">sudo apt-add-repository <a href="https://launchpad.net/~maarten-fonville/+archive/ubuntu/android-build-tools" style="color:#FFF; text-decoration:underline;">ppa:maarten-fonville/android-build-tools</a>
+          <br />sudo apt-get update
+        </div>
+        <div class="mdl-typography--caption"><span style="color:red">*</span> After adding our repository you can use the "Install" button to install</div>
+        <br />
+        <div class="mdl-typography--headline">Install the Android build tools package:</div>
+        <div class="code"><span>sudo apt-get install android-build-tools-installer</span>
+          <a href="apt:android-build-tools-installer?refresh=yep">
+          <button id="button1" class="codebutton mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+          Install
+          </button>
+          </a>
+        </div>
+        <br />
+        <div class="mdl-typography--subhead">Please read the <a href="https://github.com/mfonville/android-build-tools" style="font-weight: bold;">FAQ</a></div>
+      </div>
+      <footer class="mdl-mini-footer">
+        <div class="mdl-mini-footer--left-section">
+          <div class="mdl-logo">Developed by: <a href="https://github.com/mfonville" style="margin-right:15px;">Maarten Fonville</a>
+            <span style="white-space: nowrap">Website by: <a href="https://github.com/raulpetru">Raul Petru</a></span>
+            <div class="mdl-typography--caption-color-contrast" style="white-space: nowrap">Android is a trademark of Google Inc</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

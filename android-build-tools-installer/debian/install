@@ -1,0 +1,2 @@
+for-postinst/Makefile  usr/share/android-build-tools-installer/
+build-tools_*.zip.sha1  usr/share/android-build-tools-installer/

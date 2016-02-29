@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    configure)
+        mkdir -p /var/cache/android-build-tools-installer
+        cp /usr/share/android-build-tools-installer/Makefile \
+            /usr/share/android-build-tools-installer/build-tools_*.zip.sha1 \
+            /var/cache/android-build-tools-installer/
+        make -C /var/cache/android-build-tools-installer/ install
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

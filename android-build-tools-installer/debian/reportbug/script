@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set +e
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+take_a_peek() {
+
+	cat /etc/debian_version 2>&1 | sed -e "s,^,Debian version: ,"
+
+	dpkg --print-architecture 2>&1 | sed -e "s,^,Architecture: ,"
+
+	dpkg-query -W -f='${Version}\n' android-build-tools-installer 2>&1 | sed -e "s,^,Package version: ,"
+
+	ls -lR /var/cache/android-build-tools-installer/* 2>&1 | sed -e "s,^,\t,"
+}
+
+take_a_peek >&3 2>&1
+

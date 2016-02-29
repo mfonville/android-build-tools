@@ -1,0 +1,30 @@
+Source: android-build-tools-installer
+Section: contrib/devel
+Priority: optional
+Maintainer: Maarten Fonville <maarten.fonville@gmail.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.9.6
+Homepage: https://developer.android.com/sdk/index.html
+
+Package: android-build-tools-installer
+Multi-Arch: foreign
+Architecture: i386
+Depends: wget,
+         make | build-essential | dpkg-dev,
+         zlib1g,
+         libstdc++6,
+         unzip,
+         ca-certificates,
+         ${misc:Depends},
+Conflicts: aapt, zipalign, libclang-dev, dx
+Replaces: aapt, zipalign
+Provides: aapt, zipalign
+Description: Google build tools for Android
+ This package will download the binary Google Android build tools and create a
+ Debian package. The build tools are used in the process of assembling the
+ java code into the APK package. They can also be useful for inspecting APKs.
+ Binaries include aapt, aidl, dexdump, dx, split-select, zipalign.
+ .
+ WARNING: Installing this Debian package causes build-tools to be downloaded
+ from dl-ssl.google.com. The End User License Agreement of this binary package
+ is available at developer.android.com.

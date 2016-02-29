@@ -1,0 +1,3 @@
+var/cache/android-build-tools-installer
+usr/share/android-build-tools-installer
+usr/share/doc/android-build-tools

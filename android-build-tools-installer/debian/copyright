@@ -1,0 +1,7 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: android-build-tools-installer
+Upstream-Contact: Maarten Fonville <maarten.fonville@gmail.com>
+
+Files: *
+Copyright: Maarten Fonville
+License: GPL-3+

@@ -11,4 +11,4 @@ android-build-tools-installer_*.changes
 android-build-tools-installer_*.upload
 
 # Temporary downloaded build-tools download during configure
-tmp.zip
+build-tools_*.zip

@@ -12,7 +12,7 @@ done
 d="$1"
 case "$d" in
   trusty|wily|xenial);;
-  clean) exit 0;;
+  clean) rm build-tools_*.zip; exit 0;;
   *) echo "Unrecognized Ubuntu version, use a valid distribution as 1st argument"; exit 1;;
 esac
 
@@ -33,16 +33,15 @@ latest_minor="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:re
 latest_micro="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:micro=' | cut -d= -f 2-)"
 
 latest_linux="$(echo "$latest" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
-latest_url="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
+latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
 latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
 
-wget -q -O "$TOP/tmp.zip" "https://dl-ssl.google.com/android/repository/$latest_url"
-unpack_dir="$(unzip -qql "$TOP/tmp.zip"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/##')"
-rm "$TOP/tmp.zip"
+wget -q -c -O "$TOP/$latest_file" "https://dl-ssl.google.com/android/repository/$latest_file"
+unpack_dir="$(unzip -qql "$TOP/$latest_file"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/##')"
 
 install -d "$TOP/android-build-tools-installer"
 install -d "$TOP/android-build-tools-installer/for-postinst/"
-echo "PKG_SOURCE:=$latest_url
+echo "PKG_SOURCE:=$latest_file
 UNPACK_DIR=\$(DL_DIR)/$unpack_dir" > "$TOP/android-build-tools-installer/for-postinst/Makefile"
 tee -a "$TOP/android-build-tools-installer/for-postinst/Makefile" > /dev/null <<'EOFILE'
 PKG_SOURCE_URL:=https://dl-ssl.google.com/android/repository/${PKG_SOURCE}
@@ -142,9 +141,10 @@ distclean: clean
 
 EOFILE
 
-echo "$latest_sha1  $latest_url" > "$TOP/android-build-tools-installer/$latest_url.sha1"
+echo "$latest_sha1  $latest_file" > "$TOP/android-build-tools-installer/$latest_file.sha1"
 
 rm -f "$TOP/android-build-tools-installer/debian/changelog"
 pushd "$TOP/android-build-tools-installer" > /dev/null
 dch --create -v "$latest_major.$latest_minor.$latest_micro-ubuntu0~$d" --package "android-build-tools-installer" -D "$d" -u low "Updated to Android Build tools $latest_major.$latest_minor.$latest_micro" #also possible to pass -M if you are the maintainer in the control file
 popd > /dev/null
+echo "android-build-tools-installer_$latest_major.$latest_minor.$latest_micro-ubuntu0~$d"

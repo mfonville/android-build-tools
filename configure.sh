@@ -63,6 +63,7 @@ install: all
 	install -d -m0755 /usr/bin
 	install -m0755 \
 		$(UNPACK_DIR)/aapt \
+		$(UNPACK_DIR)/aarch64-linux-android-ld \
 		$(UNPACK_DIR)/aidl \
 		$(UNPACK_DIR)/arm-linux-androideabi-ld \
 		$(UNPACK_DIR)/bcc_compat \
@@ -77,7 +78,7 @@ install: all
 		/usr/bin/
 	install -d -m0755 /usr/lib/
 	for f in libbcc.so libbcinfo.so libclang.so libc++.so libLLVM.so; do \
-		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib/$$f /usr/lib/; done
+		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib64/$$f /usr/lib/; done
 	install -d -m0755 $(DOC_DIR)
 	gzip -9 --stdout $(UNPACK_DIR)/NOTICE.txt > $(DOC_DIR)/copyright.gz
 	install -m0644\
@@ -92,6 +93,7 @@ install: all
 		$(DOC_DIR)/copyright.gz \
 		/usr/bin \
 		/usr/bin/aapt \
+		/usr/bin/aarch64-linux-android-ld \
 		/usr/bin/aidl \
 		/usr/bin/arm-linux-androideabi-ld \
 		/usr/bin/bcc_compat \

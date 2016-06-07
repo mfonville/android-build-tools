@@ -31,6 +31,7 @@ latest="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-
 latest_major="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
 latest_minor="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:minor=' | cut -d= -f 2-)"
 latest_micro="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:micro=' | cut -d= -f 2-)"
+latest_preview="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:preview=' | cut -d= -f 2-)"
 
 latest_linux="$(echo "$latest" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
 latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
@@ -144,9 +145,16 @@ distclean: clean
 EOFILE
 
 echo "$latest_sha1  $latest_file" > "$TOP/android-build-tools-installer/$latest_file.sha1"
+if [ -n "$latest_preview" ]; then
+  versionname="$latest_major.$latest_minor.$latest_micro~rc$latest_preview-ubuntu0~$d"
+  versiontext="$latest_major.$latest_minor.$latest_micro-rc$latest_preview"
+else
+  versionname="$latest_major.$latest_minor.$latest_micro-ubuntu0~$d"
+  versiontext="$latest_major.$latest_minor.$latest_micro"
+fi
 
 rm -f "$TOP/android-build-tools-installer/debian/changelog"
 pushd "$TOP/android-build-tools-installer" > /dev/null
-dch --create -v "$latest_major.$latest_minor.$latest_micro-ubuntu0~$d" --package "android-build-tools-installer" -D "$d" -u low "Updated to Android Build tools $latest_major.$latest_minor.$latest_micro" #also possible to pass -M if you are the maintainer in the control file
+dch --create -v "$versionname" --package "android-build-tools-installer" -D "$d" -u low "Updated to Android Build tools $versiontext" #also possible to pass -M if you are the maintainer in the control file
 popd > /dev/null
-echo "android-build-tools-installer_$latest_major.$latest_minor.$latest_micro-ubuntu0~$d"
+echo "android-build-tools-installer_$versionname"

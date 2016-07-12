@@ -26,14 +26,22 @@ if [ "$repv" = "4" ]; then # we know 4 does not really exist and is an invalid r
   exit 1
 fi
 
-latest="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-$repv.xml" | xml2 | tac | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/!=#,$d')"
-
+latest="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-$repv.xml" | xml2 | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/sdk:uses-license/#,$d')"
+latest_rev="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-$repv.xml" | xml2 | tac | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/!=#,$d')"
+latest_linux="$(echo "$latest" | sed -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$d' | tail -n 5)" # assuming there are 5 lines for this result
+latest_linux_rev="$(echo "$latest_rev" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
 latest_major="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
+latest_major_rev="$(echo "$latest_rev" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
+if [ "$latest_major_rev" -gt "$latest_major" ]; then  # try to find out if the highest versionnumber is at the top or at the bottom of the XML data
+  latest="$latest_rev"
+  latest_linux="$latest_linux_rev"
+  latest_major="$latest_major_rev"
+fi
+
 latest_minor="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:minor=' | cut -d= -f 2-)"
 latest_micro="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:micro=' | cut -d= -f 2-)"
 latest_preview="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:preview=' | cut -d= -f 2-)"
 
-latest_linux="$(echo "$latest" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
 latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
 latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
 

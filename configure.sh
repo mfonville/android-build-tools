@@ -152,6 +152,7 @@ distclean: clean
 
 EOFILE
 
+rm "$TOP/android-build-tools-installer/"*.sha1
 echo "$latest_sha1  $latest_file" > "$TOP/android-build-tools-installer/$latest_file.sha1"
 if [ -n "$latest_preview" ]; then
   versionname="$latest_major.$latest_minor.$latest_micro~rc$latest_preview-ubuntu0~$d"

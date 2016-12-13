@@ -11,7 +11,7 @@ done
 
 d="$1"
 case "$d" in
-  trusty|wily|xenial|yakkety);;
+  trusty|xenial|yakkety|zesty);;
   clean) rm build-tools_*.zip; exit 0;;
   *) echo "Unrecognized Ubuntu version, use a valid distribution as 1st argument"; exit 1;;
 esac

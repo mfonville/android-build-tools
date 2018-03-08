@@ -65,15 +65,19 @@ all: $(DL_DIR)/$(UNPACK_DIR)/aapt
 
 install: all
 	install -d -m0755 /usr/share/java
-	install -m0644\
-		$(UNPACK_DIR)/lib/dx.jar\
-		$(UNPACK_DIR)/lib/shrinkedAndroid.jar\
+	install -m0644 \
+		$(UNPACK_DIR)/lib/apksigner.jar \
+    $(UNPACK_DIR)/core-lambda-stubs.jar \
+		$(UNPACK_DIR)/lib/dx.jar \
+		$(UNPACK_DIR)/lib/shrinkedAndroid.jar \
 	 	/usr/share/java/
 	install -d -m0755 /usr/bin
 	install -m0755 \
 		$(UNPACK_DIR)/aapt \
+		$(UNPACK_DIR)/aapt2 \
 		$(UNPACK_DIR)/aarch64-linux-android-ld \
 		$(UNPACK_DIR)/aidl \
+		$(UNPACK_DIR)/apksigner \
 		$(UNPACK_DIR)/arm-linux-androideabi-ld \
 		$(UNPACK_DIR)/bcc_compat \
 		$(UNPACK_DIR)/dexdump \
@@ -83,27 +87,30 @@ install: all
 		$(UNPACK_DIR)/llvm-rs-cc \
 		$(UNPACK_DIR)/mipsel-linux-android-ld \
 		$(UNPACK_DIR)/split-select \
+		$(UNPACK_DIR)/x86_64-linux-android-ld \
 		$(UNPACK_DIR)/zipalign \
 		/usr/bin/
 	install -d -m0755 /usr/lib/
-	for f in libbcc.so libbcinfo.so libclang.so libc++.so libLLVM.so; do \
+	for f in libaapt2_jni.so libbcc.so libbcinfo.so libc++.so libclang_android.so libLLVM_android.so; do \
 		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib64/$$f /usr/lib/; done
 	install -d -m0755 $(DOC_DIR)
 	gzip -9 --stdout $(UNPACK_DIR)/NOTICE.txt > $(DOC_DIR)/copyright.gz
-	install -m0644\
-		$(UNPACK_DIR)/jack.jar\
-		$(UNPACK_DIR)/jill.jar\
+	install -m0644 \
+		$(UNPACK_DIR)/mainDexClasses \
 		$(UNPACK_DIR)/mainDexClasses.rules \
-		$(UNPACK_DIR)/source.properties \
+		$(UNPACK_DIR)/mainDexClassesNoAapt.rules \
 		$(UNPACK_DIR)/runtime.properties \
+		$(UNPACK_DIR)/source.properties \
 		/usr/share/android-build-tools-installer/
 	for f in \
 		$(DOC_DIR) \
 		$(DOC_DIR)/copyright.gz \
 		/usr/bin \
 		/usr/bin/aapt \
+		/usr/bin/aapt2 \
 		/usr/bin/aarch64-linux-android-ld \
 		/usr/bin/aidl \
+		/usr/bin/apksigner \
 		/usr/bin/arm-linux-androideabi-ld \
 		/usr/bin/bcc_compat \
 		/usr/bin/dexdump \
@@ -113,20 +120,24 @@ install: all
 		/usr/bin/llvm-rs-cc \
 		/usr/bin/mipsel-linux-android-ld \
 		/usr/bin/split-select \
+		/usr/bin/x86_64-linux-android-ld \
 		/usr/bin/zipalign \
 		/usr/lib \
+		/usr/lib/libaapt2_jni.so \
 		/usr/lib/libbcc.so \
 		/usr/lib/libbcinfo.so \
-		/usr/lib/libclang.so \
 		/usr/lib/libc++.so \
-		/usr/lib/libLLVM.so \
+		/usr/lib/libclang_android.so \
+		/usr/lib/libLLVM_android.so \
 		/usr/share/android-build-tools-installer \
-		/usr/share/android-build-tools-installer/jack.jar\
-		/usr/share/android-build-tools-installer/jill.jar\
 		/usr/share/android-build-tools-installer/mainDexClasses.rules \
+		/usr/share/android-build-tools-installer/mainDexClasses.rules \
+		/usr/share/android-build-tools-installer/mainDexClassesNoAapt.rules \
 		/usr/share/android-build-tools-installer/runtime.properties \
 		/usr/share/android-build-tools-installer/source.properties \
 		/usr/share/java \
+		/usr/share/java/apk-signer.jar \
+		/usr/share/java/core-lambda-stubs.jar \
 		/usr/share/java/dx.jar \
 		/usr/share/java/shrinkedAndroid.jar ; do echo $$f; done \
 	>> /var/lib/dpkg/info/android-build-tools-installer.list

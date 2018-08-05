@@ -1,4 +1,4 @@
 # The files in the package itself are indeed not arch-dependent, but this
 # package is a downloader script and the binaries that it downloads only
-# run on i386 and amd64.
+# run on amd64.
 android-build-tools-installer: package-contains-no-arch-dependent-files

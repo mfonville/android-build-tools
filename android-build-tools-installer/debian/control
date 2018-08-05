@@ -8,7 +8,7 @@ Homepage: https://developer.android.com/sdk/index.html
 
 Package: android-build-tools-installer
 Multi-Arch: foreign
-Architecture: i386
+Architecture: amd64
 Depends: wget,
          make | build-essential | dpkg-dev,
          zlib1g,

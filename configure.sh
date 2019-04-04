@@ -59,6 +59,8 @@ DL_DIR=/var/cache/android-build-tools-installer
 DOC_DIR=/usr/share/doc/android-build-tools
 
 all: $(DL_DIR)/$(UNPACK_DIR)/aapt
+	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/apksigner
+	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/d8
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/dx
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/mainDexClasses
 	sed -i 's,^baserules=.*,baserules=/usr/share/android-build-tools-installer/mainDexClasses.rules,' $(UNPACK_DIR)/mainDexClasses

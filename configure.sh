@@ -67,7 +67,8 @@ install: all
 	install -d -m0755 /usr/share/java
 	install -m0644 \
 		$(UNPACK_DIR)/lib/apksigner.jar \
-    $(UNPACK_DIR)/core-lambda-stubs.jar \
+		$(UNPACK_DIR)/core-lambda-stubs.jar \
+		$(UNPACK_DIR)/lib/d8.jar \
 		$(UNPACK_DIR)/lib/dx.jar \
 		$(UNPACK_DIR)/lib/shrinkedAndroid.jar \
 	 	/usr/share/java/
@@ -80,6 +81,7 @@ install: all
 		$(UNPACK_DIR)/apksigner \
 		$(UNPACK_DIR)/arm-linux-androideabi-ld \
 		$(UNPACK_DIR)/bcc_compat \
+		$(UNPACK_DIR)/d8 \
 		$(UNPACK_DIR)/dexdump \
 		$(UNPACK_DIR)/dx \
 		$(UNPACK_DIR)/mainDexClasses \

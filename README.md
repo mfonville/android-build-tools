@@ -14,7 +14,7 @@ Download pre-built packages from our [PPA](https://launchpad.net/~maarten-fonvil
 #### Build android-build-tools
 Run configure with the parameters for the package you want to build:
 ```
-./configure (xenial|bionic|cosmic|disco)
+./configure (xenial|bionic|disco|eoan)
 ```
 E.g. if you want to make a package for bionic:
 ```

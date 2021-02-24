@@ -16,7 +16,7 @@ Depends: wget,
          unzip,
          ca-certificates,
          ${misc:Depends},
-Conflicts: aapt, zipalign, libclang-dev, dx
+Conflicts: aapt, zipalign, libclang-dev, dx, lld
 Replaces: aapt, zipalign
 Provides: aapt, zipalign
 Description: Google build tools for Android

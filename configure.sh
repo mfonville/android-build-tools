@@ -86,16 +86,17 @@ install: all
 		$(UNPACK_DIR)/d8 \
 		$(UNPACK_DIR)/dexdump \
 		$(UNPACK_DIR)/dx \
-		$(UNPACK_DIR)/mainDexClasses \
 		$(UNPACK_DIR)/i686-linux-android-ld \
+		$(UNPACK_DIR)/lld-bin/lld \
 		$(UNPACK_DIR)/llvm-rs-cc \
+		$(UNPACK_DIR)/mainDexClasses \
 		$(UNPACK_DIR)/mipsel-linux-android-ld \
 		$(UNPACK_DIR)/split-select \
 		$(UNPACK_DIR)/x86_64-linux-android-ld \
 		$(UNPACK_DIR)/zipalign \
 		/usr/bin/
 	install -d -m0755 /usr/lib/
-	for f in libaapt2_jni.so libbcc.so libbcinfo.so libc++.so libclang_android.so libLLVM_android.so; do \
+	for f in libaapt2_jni.so libbcc.so libbcinfo.so libc++.so libc++.so.1 libclang_android.so libLLVM_android.so; do \
 		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib64/$$f /usr/lib/; done
 	install -d -m0755 $(DOC_DIR)
 	gzip -9 --stdout $(UNPACK_DIR)/NOTICE.txt > $(DOC_DIR)/copyright.gz
@@ -119,9 +120,10 @@ install: all
 		/usr/bin/bcc_compat \
 		/usr/bin/dexdump \
 		/usr/bin/dx \
-		/usr/bin/mainDexClasses \
 		/usr/bin/i686-linux-android-ld \
+		/usr/bin/lld \
 		/usr/bin/llvm-rs-cc \
+		/usr/bin/mainDexClasses \
 		/usr/bin/mipsel-linux-android-ld \
 		/usr/bin/split-select \
 		/usr/bin/x86_64-linux-android-ld \
@@ -131,6 +133,7 @@ install: all
 		/usr/lib/libbcc.so \
 		/usr/lib/libbcinfo.so \
 		/usr/lib/libc++.so \
+		/usr/lib/libc++.so.1 \
 		/usr/lib/libclang_android.so \
 		/usr/lib/libLLVM_android.so \
 		/usr/share/android-build-tools-installer \

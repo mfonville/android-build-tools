@@ -16,8 +16,8 @@ case "$d" in
   *) echo "Unrecognized Ubuntu version, use a valid distribution as 1st argument"; exit 1;;
 esac
 
-for repv in $(seq 15 -1 4); do  # start at 15, that should be relatively safe for the near future, since we know the current protocol is on 12 (feb 2016); we know 5 is still valid
-  if wget -q --spider "https://dl-ssl.google.com/android/repository/repository-$repv.xml"; then
+for repv in $(seq 5 -1 1); do  # start at 5, that should be relatively safe for the near future, since we know the current protocol is on 1 (mar 2021)
+  if wget -q --spider "https://dl.google.com/android/repository/repository2-$repv.xml"; then
     break
   fi
 done
@@ -26,8 +26,8 @@ if [ "$repv" = "4" ]; then # we know 4 does not really exist and is an invalid r
   exit 1
 fi
 
-latest="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-$repv.xml" | xml2 | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/sdk:uses-license/#,$d')"
-latest_rev="$(wget -q -O - "https://dl-ssl.google.com/android/repository/repository-$repv.xml" | xml2 | tac | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/!=#,$d')"
+latest="$(wget -q -O - "https://dl.google.com/android/repository/repository2-$repv.xml" | xml2 | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/sdk:uses-license/#,$d')"
+latest_rev="$(wget -q -O - "https://dl.google.com/android/repository/repository2-$repv.xml" | xml2 | tac | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/!=#,$d')"
 latest_linux="$(echo "$latest" | sed -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$d' | tail -n 5)" # assuming there are 5 lines for this result
 latest_linux_rev="$(echo "$latest_rev" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
 latest_major="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
@@ -45,7 +45,7 @@ latest_preview="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:
 latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
 latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
 
-wget -q -c -O "$TOP/$latest_file" "https://dl-ssl.google.com/android/repository/$latest_file"
+wget -q -c -O "$TOP/$latest_file" "https://dl.google.com/android/repository/$latest_file"
 unpack_dir="$(unzip -qql "$TOP/$latest_file"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/##')"
 
 install -d "$TOP/android-build-tools-installer"
@@ -53,7 +53,7 @@ install -d "$TOP/android-build-tools-installer/for-postinst/"
 echo "PKG_SOURCE:=$latest_file
 UNPACK_DIR=\$(DL_DIR)/$unpack_dir" > "$TOP/android-build-tools-installer/for-postinst/Makefile"
 tee -a "$TOP/android-build-tools-installer/for-postinst/Makefile" > /dev/null <<'EOFILE'
-PKG_SOURCE_URL:=https://dl-ssl.google.com/android/repository/${PKG_SOURCE}
+PKG_SOURCE_URL:=https://dl.google.com/android/repository/${PKG_SOURCE}
 
 DL_DIR=/var/cache/android-build-tools-installer
 DOC_DIR=/usr/share/doc/android-build-tools

@@ -16,7 +16,7 @@ case "$d" in
   *) echo "Unrecognized Ubuntu version, use a valid distribution as 1st argument"; exit 1;;
 esac
 
-for repv in $(seq 5 -1 1); do  # start at 5, that should be relatively safe for the near future, since we know the current protocol is on 1 (mar 2021)
+for repv in $(seq 5 -1 1); do  # start at 5, that should be relatively safe for the near future, since we know the current protocol is on 2 (mar 2021)
   if wget -q --spider "https://dl.google.com/android/repository/repository2-$repv.xml"; then
     break
   fi
@@ -26,24 +26,15 @@ if [ "$repv" = "4" ]; then # we know 4 does not really exist and is an invalid r
   exit 1
 fi
 
-latest="$(wget -q -O - "https://dl.google.com/android/repository/repository2-$repv.xml" | xml2 | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/sdk:uses-license/#,$d')"
-latest_rev="$(wget -q -O - "https://dl.google.com/android/repository/repository2-$repv.xml" | xml2 | tac | grep '/sdk:sdk-repository/sdk:build-tool/' | sed -e '\#/sdk:sdk-repository/sdk:build-tool/!=#,$d')"
-latest_linux="$(echo "$latest" | sed -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$d' | tail -n 5)" # assuming there are 5 lines for this result
-latest_linux_rev="$(echo "$latest_rev" | sed -n -e '\#sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:host-os=linux#,$p' | head -n 5)" # assuming there are 5 lines for each build-tool result
-latest_major="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
-latest_major_rev="$(echo "$latest_rev" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:major=' | cut -d= -f 2-)"
-if [ "$latest_major_rev" -gt "$latest_major" ]; then  # try to find out if the highest versionnumber is at the top or at the bottom of the XML data
-  latest="$latest_rev"
-  latest_linux="$latest_linux_rev"
-  latest_major="$latest_major_rev"
-fi
+latest="$(wget -q -O - "https://dl.google.com/android/repository/repository2-$repv.xml" | xml2 | sed -n '\#^/sdk:sdk-repository/remotePackage/@path=build-tools;#,\#^/sdk:sdk-repository/remotePackage$#{p;\#^/sdk:sdk-repository/remotePackage$#q}')"
+latest_linux="$(echo "$latest" | sed -e '\#sdk:sdk-repository/remotePackage/archives/archive/host-os=linux#,$d' | tail -n 5)" # assuming there are 5 lines for this result
+latest_major="$(echo "$latest" | grep '/sdk:sdk-repository/remotePackage/revision/major=' | cut -d= -f 2-)"
+latest_minor="$(echo "$latest" | grep '/sdk:sdk-repository/remotePackage/revision/minor=' | cut -d= -f 2-)"
+latest_micro="$(echo "$latest" | grep '/sdk:sdk-repository/remotePackage/revision/micro=' | cut -d= -f 2-)"
+latest_preview="$(echo "$latest" | grep '/sdk:sdk-repository/remotePackage/revision/preview=' | cut -d= -f 2-)"
 
-latest_minor="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:minor=' | cut -d= -f 2-)"
-latest_micro="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:micro=' | cut -d= -f 2-)"
-latest_preview="$(echo "$latest" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:revision/sdk:preview=' | cut -d= -f 2-)"
-
-latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:url=' | cut -d= -f 2-)"
-latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/sdk:build-tool/sdk:archives/sdk:archive/sdk:checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
+latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/remotePackage/archives/archive/complete/url=' | cut -d= -f 2-)"
+latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/remotePackage/archives/archive/complete/checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
 
 wget -q -c -O "$TOP/$latest_file" "https://dl.google.com/android/repository/$latest_file"
 unpack_dir="$(unzip -qql "$TOP/$latest_file"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/##')"

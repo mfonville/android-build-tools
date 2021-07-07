@@ -16,6 +16,7 @@ Depends: wget,
          unzip,
          ca-certificates,
          ${misc:Depends},
+Suggests: libncurses5
 Conflicts: aapt, zipalign, libclang-dev, dx, lld
 Replaces: aapt, zipalign
 Provides: aapt, zipalign

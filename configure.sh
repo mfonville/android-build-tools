@@ -52,7 +52,6 @@ DOC_DIR=/usr/share/doc/android-build-tools
 all: $(DL_DIR)/$(UNPACK_DIR)/aapt
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/apksigner
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/d8
-	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/dx
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/mainDexClasses
 	sed -i 's,^baserules=.*,baserules=/usr/share/android-build-tools-installer/mainDexClasses.rules,' $(UNPACK_DIR)/mainDexClasses
 
@@ -108,7 +107,6 @@ install: all
 		/usr/bin/arm-linux-androideabi-ld \
 		/usr/bin/bcc_compat \
 		/usr/bin/dexdump \
-		/usr/bin/dx \
 		/usr/bin/i686-linux-android-ld \
 		/usr/bin/lld \
 		/usr/bin/llvm-rs-cc \
@@ -134,7 +132,6 @@ install: all
 		/usr/share/java \
 		/usr/share/java/apk-signer.jar \
 		/usr/share/java/core-lambda-stubs.jar \
-		/usr/share/java/dx.jar \
 		/usr/share/java/shrinkedAndroid.jar ; do echo $$f; done \
 	>> /var/lib/dpkg/info/android-build-tools-installer.list
 

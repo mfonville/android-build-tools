@@ -37,7 +37,7 @@ latest_file="$(echo "$latest_linux" | grep '/sdk:sdk-repository/remotePackage/ar
 latest_sha1="$(echo "$latest_linux" | grep '/sdk:sdk-repository/remotePackage/archives/archive/complete/checksum=' | cut -d= -f 2-)" # assuming sha1 is the only checksum available
 
 wget -q -c -O "$TOP/$latest_file" "https://dl.google.com/android/repository/$latest_file"
-unpack_dir="$(unzip -qql "$TOP/$latest_file"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/##')"
+unpack_dir="$(unzip -qql "$TOP/$latest_file"  | sed -r '1 {s/([ ]+[^ ]+){3}\s+//;q}' | sed 's#/.*##')"
 
 install -d "$TOP/android-build-tools-installer"
 install -d "$TOP/android-build-tools-installer/for-postinst/"
@@ -52,8 +52,6 @@ DOC_DIR=/usr/share/doc/android-build-tools
 all: $(DL_DIR)/$(UNPACK_DIR)/aapt
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/apksigner
 	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/d8
-	sed -i 's,^libdir=.*,libdir=/usr/share/java,' $(UNPACK_DIR)/mainDexClasses
-	sed -i 's,^baserules=.*,baserules=/usr/share/android-build-tools-installer/mainDexClasses.rules,' $(UNPACK_DIR)/mainDexClasses
 
 install: all
 	install -d -m0755 /usr/share/java
@@ -61,7 +59,6 @@ install: all
 		$(UNPACK_DIR)/lib/apksigner.jar \
 		$(UNPACK_DIR)/core-lambda-stubs.jar \
 		$(UNPACK_DIR)/lib/d8.jar \
-		$(UNPACK_DIR)/lib/shrinkedAndroid.jar \
 	 	/usr/share/java/
 	install -d -m0755 /usr/bin
 	install -m0755 \
@@ -77,21 +74,17 @@ install: all
 		$(UNPACK_DIR)/i686-linux-android-ld \
 		$(UNPACK_DIR)/lld-bin/lld \
 		$(UNPACK_DIR)/llvm-rs-cc \
-		$(UNPACK_DIR)/mainDexClasses \
 		$(UNPACK_DIR)/mipsel-linux-android-ld \
 		$(UNPACK_DIR)/split-select \
 		$(UNPACK_DIR)/x86_64-linux-android-ld \
 		$(UNPACK_DIR)/zipalign \
 		/usr/bin/
 	install -d -m0755 /usr/lib/
-	for f in libaapt2_jni.so libbcc.so libbcinfo.so libc++.so libc++.so.1 libclang_android.so libLLVM_android.so; do \
+	for f in libbcc.so libbcinfo.so libc++.so libc++.so.1 libclang_android.so libconscrypt_openjdk_jni.so libLLVM_android.so; do \
 		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib64/$$f /usr/lib/; done
 	install -d -m0755 $(DOC_DIR)
 	gzip -9 --stdout $(UNPACK_DIR)/NOTICE.txt > $(DOC_DIR)/copyright.gz
 	install -m0644 \
-		$(UNPACK_DIR)/mainDexClasses \
-		$(UNPACK_DIR)/mainDexClasses.rules \
-		$(UNPACK_DIR)/mainDexClassesNoAapt.rules \
 		$(UNPACK_DIR)/runtime.properties \
 		$(UNPACK_DIR)/source.properties \
 		/usr/share/android-build-tools-installer/
@@ -110,29 +103,24 @@ install: all
 		/usr/bin/i686-linux-android-ld \
 		/usr/bin/lld \
 		/usr/bin/llvm-rs-cc \
-		/usr/bin/mainDexClasses \
 		/usr/bin/mipsel-linux-android-ld \
 		/usr/bin/split-select \
 		/usr/bin/x86_64-linux-android-ld \
 		/usr/bin/zipalign \
 		/usr/lib \
-		/usr/lib/libaapt2_jni.so \
 		/usr/lib/libbcc.so \
 		/usr/lib/libbcinfo.so \
 		/usr/lib/libc++.so \
 		/usr/lib/libc++.so.1 \
 		/usr/lib/libclang_android.so \
+		/usr/lib/libconscrypt_openjdk_jni.so
 		/usr/lib/libLLVM_android.so \
 		/usr/share/android-build-tools-installer \
-		/usr/share/android-build-tools-installer/mainDexClasses.rules \
-		/usr/share/android-build-tools-installer/mainDexClasses.rules \
-		/usr/share/android-build-tools-installer/mainDexClassesNoAapt.rules \
 		/usr/share/android-build-tools-installer/runtime.properties \
 		/usr/share/android-build-tools-installer/source.properties \
 		/usr/share/java \
 		/usr/share/java/apk-signer.jar \
-		/usr/share/java/core-lambda-stubs.jar \
-		/usr/share/java/shrinkedAndroid.jar ; do echo $$f; done \
+		/usr/share/java/core-lambda-stubs.jar ; do echo $$f; done \
 	>> /var/lib/dpkg/info/android-build-tools-installer.list
 
 $(DL_DIR)/$(UNPACK_DIR)/aapt: $(DL_DIR)/$(PKG_SOURCE)
@@ -167,7 +155,7 @@ else
 fi
 
 rm -f "$TOP/android-build-tools-installer/debian/changelog"
-pushd "$TOP/android-build-tools-installer" > /dev/null
+pushd "$TOP/android-build-tools-installer" || exit 1 > /dev/null
 dch --create --force-distribution -v "$versionname" --package "android-build-tools-installer" -D "$d" -u low "Updated to Android Build tools $versiontext" #also possible to pass -M if you are the maintainer in the control file
-popd > /dev/null
+popd  || exit 1 > /dev/null
 echo "android-build-tools-installer_$versionname"

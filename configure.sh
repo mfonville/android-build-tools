@@ -113,7 +113,7 @@ install: all
 		/usr/lib/libc++.so \
 		/usr/lib/libc++.so.1 \
 		/usr/lib/libclang_android.so \
-		/usr/lib/libconscrypt_openjdk_jni.so
+		/usr/lib/libconscrypt_openjdk_jni.so \
 		/usr/lib/libLLVM_android.so \
 		/usr/share/android-build-tools-installer \
 		/usr/share/android-build-tools-installer/runtime.properties \

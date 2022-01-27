@@ -155,7 +155,7 @@ else
 fi
 
 rm -f "$TOP/android-build-tools-installer/debian/changelog"
-pushd "$TOP/android-build-tools-installer" || exit 1 > /dev/null
+pushd "$TOP/android-build-tools-installer" > /dev/null || exit 1
 dch --create --force-distribution -v "$versionname" --package "android-build-tools-installer" -D "$d" -u low "Updated to Android Build tools $versiontext" #also possible to pass -M if you are the maintainer in the control file
-popd  || exit 1 > /dev/null
+popd > /dev/null || exit 1
 echo "android-build-tools-installer_$versionname"

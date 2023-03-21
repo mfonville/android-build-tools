@@ -16,7 +16,7 @@ case "$d" in
   *) echo "Unrecognized Ubuntu version, use a valid distribution as 1st argument"; exit 1;;
 esac
 
-for repv in $(seq 5 -1 1); do  # start at 5, that should be relatively safe for the near future, since we know the current protocol is on 2 (mar 2021)
+for repv in $(seq 5 -1 1); do  # start at 5, that should be relatively safe for the near future, since we know the current protocol is on 3 (mar 2023)
   if wget -q --spider "https://dl.google.com/android/repository/repository2-$repv.xml"; then
     break
   fi

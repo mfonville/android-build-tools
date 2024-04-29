@@ -14,11 +14,11 @@ Download pre-built packages from our [PPA](https://launchpad.net/~maarten-fonvil
 #### Build android-build-tools
 Run configure with the parameters for the package you want to build:
 ```
-./configure (focal|jammy|mantic|noble)
+./configure (focal|jammy|noble|oracular)
 ```
-E.g. if you want to make a package for jammy:
+E.g. if you want to make a package for noble:
 ```
-./configure jammy
+./configure noble
 ```
 After configuring you can build the package as usual with `debuild` or `pbuilder` in the *android-build-tools* folder
 

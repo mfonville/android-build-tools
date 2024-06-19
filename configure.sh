@@ -80,7 +80,7 @@ install: all
 		$(UNPACK_DIR)/zipalign \
 		/usr/bin/
 	install -d -m0755 /usr/lib/
-	for f in libbcc.so libbcinfo.so libc++.so libc++.so.1 libclang_android.so libconscrypt_openjdk_jni.so libLLVM_android.so; do \
+	for f in libbcc.so libbcinfo.so libc++.so libc++.so.1 libclang_android.so libLLVM_android.so; do \
 		test -e /usr/bin/$$f || install -m0644 $(UNPACK_DIR)/lib64/$$f /usr/lib/; done
 	install -d -m0755 $(DOC_DIR)
 	gzip -9 --stdout $(UNPACK_DIR)/NOTICE.txt > $(DOC_DIR)/copyright.gz
@@ -113,7 +113,6 @@ install: all
 		/usr/lib/libc++.so \
 		/usr/lib/libc++.so.1 \
 		/usr/lib/libclang_android.so \
-		/usr/lib/libconscrypt_openjdk_jni.so \
 		/usr/lib/libLLVM_android.so \
 		/usr/share/android-build-tools-installer \
 		/usr/share/android-build-tools-installer/runtime.properties \
